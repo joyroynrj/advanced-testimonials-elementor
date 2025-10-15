@@ -161,7 +161,7 @@ final class Advanced_Testimonials_Elementor {
         if (is_admin()) {
             new ATE_GitHub_Updater(
                 ATE_PLUGIN_FILE,
-                'joyroynripen',  // Change this to your GitHub username
+                'joyroynrj',  // Change this to your GitHub username
                 'advanced-testimonials-elementor'       // Change this to your repository name
             );
         }
