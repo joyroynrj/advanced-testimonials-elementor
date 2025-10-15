@@ -1,0 +1,219 @@
+/* Advanced Testimonials for Elementor - Styles */
+
+.ate-testimonials-wrapper {
+    position: relative;
+}
+
+.ate-testimonials-carousel {
+    position: relative;
+    overflow: hidden;
+}
+
+.ate-testimonial-item {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.ate-testimonial-item:hover {
+    transform: translateY(-5px);
+}
+
+/* Image Position Layouts */
+.ate-image-position-top .ate-testimonial-item {
+    flex-direction: column;
+    margin-top: 5px;
+}
+
+.ate-image-position-left .ate-testimonial-item {
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.ate-image-position-right .ate-testimonial-item {
+    flex-direction: row-reverse;
+    align-items: flex-start;
+}
+
+.ate-image-position-left .ate-testimonial-image,
+.ate-image-position-right .ate-testimonial-image {
+    flex-shrink: 0;
+}
+
+.ate-image-position-left .ate-testimonial-content-wrapper {
+    margin-left: 20px;
+}
+
+.ate-image-position-right .ate-testimonial-content-wrapper {
+    margin-right: 20px;
+}
+
+/* Image */
+.ate-testimonial-image {
+    text-align: center;
+}
+
+.ate-testimonial-image img {
+    display: inline-block;
+    object-fit: cover;
+    max-width: 100%;
+}
+
+.ate-image-position-left .ate-testimonial-image img,
+.ate-image-position-right .ate-testimonial-image img {
+    margin: 0;
+}
+
+/* Content Wrapper */
+.ate-testimonial-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+/* Rating */
+.ate-testimonial-rating {
+    display: flex;
+    gap: 4px;
+}
+
+.ate-testimonial-rating i {
+    display: inline-block;
+}
+
+/* Name */
+.ate-testimonial-name {
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* Title */
+.ate-testimonial-title {
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* Content */
+.ate-testimonial-content {
+    line-height: 1.6;
+}
+
+.ate-testimonial-content p {
+    margin: 0 0 10px;
+}
+
+.ate-testimonial-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* Navigation Arrows */
+.ate-swiper-button-prev,
+.ate-swiper-button-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    user-select: none;
+    line-height: 1;
+}
+
+.ate-swiper-button-prev i,
+.ate-swiper-button-next i {
+    line-height: 1;
+}
+
+/* Fallback if Font Awesome doesn't load */
+.ate-swiper-button-prev:not(:has(i)):before {
+    content: '‹';
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.ate-swiper-button-next:not(:has(i)):before {
+    content: '›';
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+/* Arrow Position - Inside */
+.ate-swiper-button-prev {
+    left: 10px;
+}
+
+.ate-swiper-button-next {
+    right: 10px;
+}
+
+.ate-swiper-button-prev:hover,
+.ate-swiper-button-next:hover {
+    opacity: 0.7;
+}
+
+.ate-swiper-button-prev.swiper-button-disabled,
+.ate-swiper-button-next.swiper-button-disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+/* Pagination */
+.swiper-pagination {
+    position: relative;
+    margin-top: 30px;
+    text-align: center;
+}
+
+/* Dots Position - Outside (default) */
+.ate-dots-outside .swiper-pagination {
+    position: relative;
+    margin-top: 30px;
+}
+
+/* Dots Position - Inside */
+.ate-dots-inside .swiper-pagination {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    margin-top: 0;
+    z-index: 10;
+}
+
+.swiper-pagination-bullet {
+    border-radius: 50%;
+    opacity: 1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 0 5px;
+}
+
+.swiper-pagination-bullet:hover {
+    opacity: 0.7;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+    .ate-image-position-left .ate-testimonial-item,
+    .ate-image-position-right .ate-testimonial-item {
+        flex-direction: column;
+    }
+
+    .ate-image-position-left .ate-testimonial-content-wrapper,
+    .ate-image-position-right .ate-testimonial-content-wrapper {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .ate-swiper-button-prev {
+        left: 3px;
+    }
+    
+    .ate-swiper-button-next {
+        right: 3px;
+    }
+}
