@@ -17,6 +17,103 @@
     // Store initialized carousels by widget ID
     const initializedCarousels = {};
 
+    /**
+     * Truncate text to word count
+     */
+    const truncateText = function(text, wordCount) {
+        const words = text.trim().split(/\s+/);
+        if (words.length <= wordCount) {
+            return { truncated: text, isTruncated: false };
+        }
+        const truncated = words.slice(0, wordCount).join(' ');
+        return { truncated: truncated + '...', isTruncated: true };
+    };
+
+    /**
+     * Strip HTML tags from text
+     */
+    const stripHtmlTags = function(html) {
+        const tmp = document.createElement('DIV');
+        tmp.innerHTML = html;
+        return tmp.textContent || tmp.innerText || '';
+    };
+
+    /**
+     * Initialize Read More/Less functionality
+     */
+    const initReadMore = function($wrapper) {
+        const enableReadMore = $wrapper.data('read-more') === 'yes';
+        
+        if (!enableReadMore) {
+            return;
+        }
+
+        const wordCount = parseInt($wrapper.data('word-count')) || 20;
+        const readMoreText = $wrapper.data('read-more-text') || 'Read More';
+        const readLessText = $wrapper.data('read-less-text') || 'Read Less';
+
+        debug('Initializing Read More', { wordCount, readMoreText, readLessText });
+
+        $wrapper.find('.ate-testimonial-content').each(function() {
+            const $content = $(this);
+            const fullContent = $content.html();
+            const fullText = stripHtmlTags(fullContent);
+            
+            const result = truncateText(fullText, wordCount);
+            
+            if (result.isTruncated) {
+                // Store full content
+                $content.data('full-content', fullContent);
+                $content.data('full-text', fullText);
+                
+                // Create truncated version
+                const $truncatedSpan = $('<span class="ate-truncated-text"></span>').text(result.truncated);
+                const $fullSpan = $('<span class="ate-full-text"></span>').html(fullContent);
+                const $readMoreWrapper = $('<div class="ate-read-more-wrapper"></div>');
+                const $readMoreBtn = $('<button class="ate-read-more-btn" type="button"></button>')
+                    .text(readMoreText)
+                    .data('expanded', false);
+                
+                // Build structure: content wrapper > [truncated span, full span, button wrapper > button]
+                $readMoreWrapper.append($readMoreBtn);
+                
+                // Replace content
+                $content.empty()
+                    .addClass('ate-truncated')
+                    .append($truncatedSpan)
+                    .append($fullSpan)
+                    .append($readMoreWrapper);
+                
+                // Add click handler
+                $readMoreBtn.on('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const isExpanded = $readMoreBtn.data('expanded');
+                    
+                    if (isExpanded) {
+                        $content.removeClass('ate-expanded');
+                        $readMoreBtn.text(readMoreText).data('expanded', false);
+                    } else {
+                        $content.addClass('ate-expanded');
+                        $readMoreBtn.text(readLessText).data('expanded', true);
+                    }
+                    
+                    // Trigger Swiper update if carousel exists
+                    const $carousel = $content.closest('.ate-testimonials-carousel');
+                    if ($carousel.length && $carousel[0].swiper) {
+                        setTimeout(function() {
+                            $carousel[0].swiper.update();
+                        }, 50);
+                    }
+                });
+            }
+        });
+    };
+
+    /**
+     * Initialize Testimonials Carousel
+     */
     const initTestimonials = function($scope) {
         debug('initTestimonials called');
         
@@ -79,6 +176,10 @@
 
         // Cleanup first
         cleanupSwiper();
+
+        // Initialize Read More/Less
+        const $wrapper = $scope.find('.ate-testimonials-wrapper');
+        initReadMore($wrapper);
 
         // Initialize with delay to ensure DOM is ready
         setTimeout(function() {

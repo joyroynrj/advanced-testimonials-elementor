@@ -26,7 +26,6 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
     }
 
     public function get_script_depends() {
-        // Force enqueue scripts
         wp_enqueue_script('swiper');
         wp_enqueue_script('ate-testimonials');
         
@@ -34,7 +33,6 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
     }
 
     public function get_style_depends() {
-        // Force enqueue styles
         wp_enqueue_style('swiper');
         wp_enqueue_style('ate-testimonials');
         wp_enqueue_style('font-awesome-6');
@@ -54,7 +52,6 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
 
         $repeater = new \Elementor\Repeater();
 
-        // Image
         $repeater->add_control(
             'image',
             [
@@ -78,7 +75,6 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        // Name
         $repeater->add_control(
             'name',
             [
@@ -89,7 +85,6 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        // Title
         $repeater->add_control(
             'title',
             [
@@ -100,7 +95,6 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        // Rating
         $repeater->add_control(
             'rating',
             [
@@ -125,7 +119,6 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        // Content
         $repeater->add_control(
             'content',
             [
@@ -135,7 +128,6 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        // Link
         $repeater->add_control(
             'link',
             [
@@ -211,12 +203,87 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
 
         $this->end_controls_section();
 
+        // Read More/Less Section
+        $this->start_controls_section(
+            'section_read_more',
+            [
+                'label' => esc_html__('Read More/Less', 'advanced-testimonials-elementor'),
+                'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        $this->add_control(
+            'enable_read_more',
+            [
+                'label' => esc_html__('Enable Read More/Less', 'advanced-testimonials-elementor'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => esc_html__('Yes', 'advanced-testimonials-elementor'),
+                'label_off' => esc_html__('No', 'advanced-testimonials-elementor'),
+                'return_value' => 'yes',
+                'default' => '',
+            ]
+        );
+
+        $this->add_control(
+            'read_more_word_count',
+            [
+                'label' => esc_html__('Word Count', 'advanced-testimonials-elementor'),
+                'type' => \Elementor\Controls_Manager::NUMBER,
+                'default' => 20,
+                'min' => 5,
+                'max' => 200,
+                'description' => esc_html__('Number of words to show before "Read More"', 'advanced-testimonials-elementor'),
+                'condition' => [
+                    'enable_read_more' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'read_more_text',
+            [
+                'label' => esc_html__('Read More Text', 'advanced-testimonials-elementor'),
+                'type' => \Elementor\Controls_Manager::TEXT,
+                'default' => esc_html__('Read More', 'advanced-testimonials-elementor'),
+                'condition' => [
+                    'enable_read_more' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'read_less_text',
+            [
+                'label' => esc_html__('Read Less Text', 'advanced-testimonials-elementor'),
+                'type' => \Elementor\Controls_Manager::TEXT,
+                'default' => esc_html__('Read Less', 'advanced-testimonials-elementor'),
+                'condition' => [
+                    'enable_read_more' => 'yes',
+                ],
+            ]
+        );
+
+        $this->end_controls_section();
+
         // Additional Options Section
         $this->start_controls_section(
             'section_additional_options',
             [
-                'label' => esc_html__('Additional Options', 'advanced-testimonials-elementor'),
+                'label' => esc_html__('Carousel Options', 'advanced-testimonials-elementor'),
                 'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+        $this->add_control(
+            'equal_height',
+            [
+                'label' => esc_html__('Equal Height Slides', 'advanced-testimonials-elementor'),
+                'type' => \Elementor\Controls_Manager::SWITCHER,
+                'label_on' => esc_html__('Yes', 'advanced-testimonials-elementor'),
+                'label_off' => esc_html__('No', 'advanced-testimonials-elementor'),
+                'return_value' => 'yes',
+                'default' => 'yes',
+                'description' => esc_html__('Make all slides the same height', 'advanced-testimonials-elementor'),
             ]
         );
 
@@ -309,6 +376,22 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
                     'none' => esc_html__('None', 'advanced-testimonials-elementor'),
                 ],
                 'default' => 'both',
+            ]
+        );
+
+        $this->add_control(
+            'arrow_position',
+            [
+                'label' => esc_html__('Arrow Position', 'advanced-testimonials-elementor'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'options' => [
+                    'sides' => esc_html__('Sides (Left/Right)', 'advanced-testimonials-elementor'),
+                    'bottom' => esc_html__('Bottom (Before Dots)', 'advanced-testimonials-elementor'),
+                ],
+                'default' => 'sides',
+                'condition' => [
+                    'navigation' => ['arrows', 'both'],
+                ],
             ]
         );
 
@@ -471,10 +554,6 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
                     '%' => [
                         'min' => 10,
                         'max' => 100,
-                    ],
-                    'em' => [
-                        'min' => 1,
-                        'max' => 30,
                     ],
                 ],
                 'default' => [
@@ -786,6 +865,74 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
 
         $this->end_controls_section();
 
+        // Read More Style
+        $this->start_controls_section(
+            'section_read_more_style',
+            [
+                'label' => esc_html__('Read More Button', 'advanced-testimonials-elementor'),
+                'tab' => \Elementor\Controls_Manager::TAB_STYLE,
+                'condition' => [
+                    'enable_read_more' => 'yes',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'read_more_color',
+            [
+                'label' => esc_html__('Color', 'advanced-testimonials-elementor'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'default' => '#0073e6',
+                'selectors' => [
+                    '{{WRAPPER}} .ate-read-more-btn' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'read_more_hover_color',
+            [
+                'label' => esc_html__('Hover Color', 'advanced-testimonials-elementor'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'default' => '#005bb5',
+                'selectors' => [
+                    '{{WRAPPER}} .ate-read-more-btn:hover' => 'color: {{VALUE}};',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'read_more_typography',
+                'selector' => '{{WRAPPER}} .ate-read-more-btn',
+            ]
+        );
+
+        $this->add_responsive_control(
+            'read_more_spacing',
+            [
+                'label' => esc_html__('Spacing', 'advanced-testimonials-elementor'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 50,
+                    ],
+                ],
+                'default' => [
+                    'size' => 10,
+                    'unit' => 'px',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .ate-read-more-btn' => 'margin-top: {{SIZE}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->end_controls_section();
+
         // Navigation Style
         $this->start_controls_section(
             'section_navigation_style',
@@ -805,6 +952,72 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
         );
 
         $this->add_control(
+            'custom_arrow_type',
+            [
+                'label' => esc_html__('Arrow Type', 'advanced-testimonials-elementor'),
+                'type' => \Elementor\Controls_Manager::SELECT,
+                'options' => [
+                    'default' => esc_html__('Default (Font Awesome)', 'advanced-testimonials-elementor'),
+                    'icon' => esc_html__('Custom Icon', 'advanced-testimonials-elementor'),
+                    'image' => esc_html__('Custom Image', 'advanced-testimonials-elementor'),
+                ],
+                'default' => 'default',
+            ]
+        );
+
+        $this->add_control(
+            'custom_prev_icon',
+            [
+                'label' => esc_html__('Previous Icon', 'advanced-testimonials-elementor'),
+                'type' => \Elementor\Controls_Manager::ICONS,
+                'default' => [
+                    'value' => 'fas fa-chevron-left',
+                    'library' => 'fa-solid',
+                ],
+                'condition' => [
+                    'custom_arrow_type' => 'icon',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'custom_next_icon',
+            [
+                'label' => esc_html__('Next Icon', 'advanced-testimonials-elementor'),
+                'type' => \Elementor\Controls_Manager::ICONS,
+                'default' => [
+                    'value' => 'fas fa-chevron-right',
+                    'library' => 'fa-solid',
+                ],
+                'condition' => [
+                    'custom_arrow_type' => 'icon',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'custom_prev_image',
+            [
+                'label' => esc_html__('Previous Arrow Image', 'advanced-testimonials-elementor'),
+                'type' => \Elementor\Controls_Manager::MEDIA,
+                'condition' => [
+                    'custom_arrow_type' => 'image',
+                ],
+            ]
+        );
+
+        $this->add_control(
+            'custom_next_image',
+            [
+                'label' => esc_html__('Next Arrow Image', 'advanced-testimonials-elementor'),
+                'type' => \Elementor\Controls_Manager::MEDIA,
+                'condition' => [
+                    'custom_arrow_type' => 'image',
+                ],
+            ]
+        );
+
+        $this->add_control(
             'arrow_color',
             [
                 'label' => esc_html__('Color', 'advanced-testimonials-elementor'),
@@ -812,6 +1025,9 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
                 'default' => '#333333',
                 'selectors' => [
                     '{{WRAPPER}} .ate-swiper-button-prev, {{WRAPPER}} .ate-swiper-button-next' => 'color: {{VALUE}};',
+                ],
+                'condition' => [
+                    'custom_arrow_type!' => 'image',
                 ],
             ]
         );
@@ -824,6 +1040,9 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
                 'default' => '#000000',
                 'selectors' => [
                     '{{WRAPPER}} .ate-swiper-button-prev:hover, {{WRAPPER}} .ate-swiper-button-next:hover' => 'color: {{VALUE}};',
+                ],
+                'condition' => [
+                    'custom_arrow_type!' => 'image',
                 ],
             ]
         );
@@ -870,6 +1089,7 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
                 ],
                 'selectors' => [
                     '{{WRAPPER}} .ate-swiper-button-prev, {{WRAPPER}} .ate-swiper-button-next' => 'font-size: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .ate-swiper-button-prev img, {{WRAPPER}} .ate-swiper-button-next img' => 'width: {{SIZE}}{{UNIT}}; height: auto;',
                 ],
             ]
         );
@@ -894,6 +1114,31 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
                 'size_units' => ['px', '%'],
                 'selectors' => [
                     '{{WRAPPER}} .ate-swiper-button-prev, {{WRAPPER}} .ate-swiper-button-next' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                ],
+            ]
+        );
+
+        $this->add_responsive_control(
+            'arrow_spacing',
+            [
+                'label' => esc_html__('Spacing (For Bottom Position)', 'advanced-testimonials-elementor'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'default' => [
+                    'size' => 20,
+                    'unit' => 'px',
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .ate-arrows-bottom .ate-navigation-bottom' => 'margin-top: {{SIZE}}{{UNIT}};',
+                ],
+                'condition' => [
+                    'arrow_position' => 'bottom',
                 ],
             ]
         );
@@ -1044,11 +1289,30 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
 
         $image_position = $settings['image_position'] ?? 'top';
         $dots_position = $settings['dots_position'] ?? 'outside';
+        $arrow_position = $settings['arrow_position'] ?? 'sides';
+        $equal_height = $settings['equal_height'] === 'yes' ? 'ate-equal-height' : '';
+        $enable_read_more = $settings['enable_read_more'] === 'yes';
+        $word_count = $settings['read_more_word_count'] ?? 20;
+        $read_more_text = $settings['read_more_text'] ?? 'Read More';
+        $read_less_text = $settings['read_less_text'] ?? 'Read Less';
+
+        $wrapper_classes = [
+            'ate-testimonials-wrapper',
+            'ate-image-position-' . $image_position,
+            'ate-dots-' . $dots_position,
+            'ate-arrows-' . $arrow_position,
+            $equal_height
+        ];
         ?>
-        <div class="ate-testimonials-wrapper ate-image-position-<?php echo esc_attr($image_position); ?> ate-dots-<?php echo esc_attr($dots_position); ?>">
+        <div class="<?php echo esc_attr(implode(' ', $wrapper_classes)); ?>" 
+             data-read-more="<?php echo $enable_read_more ? 'yes' : 'no'; ?>"
+             data-word-count="<?php echo esc_attr($word_count); ?>"
+             data-read-more-text="<?php echo esc_attr($read_more_text); ?>"
+             data-read-less-text="<?php echo esc_attr($read_less_text); ?>">
+            
             <div class="swiper ate-testimonials-carousel" data-swiper-settings='<?php echo esc_attr(json_encode($swiper_settings)); ?>'>
                 <div class="swiper-wrapper">
-                    <?php foreach ($settings['testimonials'] as $testimonial): 
+                    <?php foreach ($settings['testimonials'] as $index => $testimonial): 
                         $show_image = $settings['global_show_image'] === 'yes' && $testimonial['show_image'] === 'yes';
                         $show_rating = $settings['global_show_rating'] === 'yes' && $testimonial['show_rating'] === 'yes';
                         
@@ -1082,7 +1346,7 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
                                     <?php endif; ?>
 
                                     <?php if (!empty($testimonial['content'])): ?>
-                                        <div class="ate-testimonial-content">
+                                        <div class="ate-testimonial-content" data-full-content="<?php echo esc_attr(wp_strip_all_tags($testimonial['content'])); ?>">
                                             <?php echo wp_kses_post($testimonial['content']); ?>
                                         </div>
                                     <?php endif; ?>
@@ -1104,21 +1368,57 @@ class ATE_Testimonial_Widget extends \Elementor\Widget_Base {
                     <?php endforeach; ?>
                 </div>
 
-                <?php if ($show_arrows): ?>
-                    <div class="ate-swiper-button-prev ate-swiper-button-prev-<?php echo esc_attr($widget_id); ?>">
-                        <i class="fas fa-chevron-left" aria-hidden="true"></i>
-                    </div>
-                    <div class="ate-swiper-button-next ate-swiper-button-next-<?php echo esc_attr($widget_id); ?>">
-                        <i class="fas fa-chevron-right" aria-hidden="true"></i>
-                    </div>
+                <?php if ($show_arrows && $arrow_position === 'sides'): ?>
+                    <?php echo $this->render_navigation_arrows($settings, $widget_id); ?>
                 <?php endif; ?>
 
-                <?php if ($show_dots): ?>
+                <?php if ($show_dots && $arrow_position === 'sides'): ?>
                     <div class="swiper-pagination swiper-pagination-<?php echo esc_attr($widget_id); ?>"></div>
                 <?php endif; ?>
             </div>
+
+            <?php if ($arrow_position === 'bottom' && ($show_arrows || $show_dots)): ?>
+                <div class="ate-navigation-bottom">
+                    <?php if ($show_arrows): ?>
+                        <div class="ate-arrows-container">
+                            <?php echo $this->render_navigation_arrows($settings, $widget_id); ?>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <?php if ($show_dots): ?>
+                        <div class="swiper-pagination swiper-pagination-<?php echo esc_attr($widget_id); ?>"></div>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
         </div>
         <?php
+    }
+
+    protected function render_navigation_arrows($settings, $widget_id) {
+        $arrow_type = $settings['custom_arrow_type'] ?? 'default';
+        
+        ob_start();
+        ?>
+        <div class="ate-swiper-button-prev ate-swiper-button-prev-<?php echo esc_attr($widget_id); ?>">
+            <?php if ($arrow_type === 'image' && !empty($settings['custom_prev_image']['url'])): ?>
+                <img src="<?php echo esc_url($settings['custom_prev_image']['url']); ?>" alt="Previous">
+            <?php elseif ($arrow_type === 'icon' && !empty($settings['custom_prev_icon']['value'])): ?>
+                <?php \Elementor\Icons_Manager::render_icon($settings['custom_prev_icon'], ['aria-hidden' => 'true']); ?>
+            <?php else: ?>
+                <i class="fas fa-chevron-left" aria-hidden="true"></i>
+            <?php endif; ?>
+        </div>
+        <div class="ate-swiper-button-next ate-swiper-button-next-<?php echo esc_attr($widget_id); ?>">
+            <?php if ($arrow_type === 'image' && !empty($settings['custom_next_image']['url'])): ?>
+                <img src="<?php echo esc_url($settings['custom_next_image']['url']); ?>" alt="Next">
+            <?php elseif ($arrow_type === 'icon' && !empty($settings['custom_next_icon']['value'])): ?>
+                <?php \Elementor\Icons_Manager::render_icon($settings['custom_next_icon'], ['aria-hidden' => 'true']); ?>
+            <?php else: ?>
+                <i class="fas fa-chevron-right" aria-hidden="true"></i>
+            <?php endif; ?>
+        </div>
+        <?php
+        return ob_get_clean();
     }
 
     protected function render_stars($rating) {

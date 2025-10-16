@@ -7,12 +7,29 @@
 .ate-testimonials-carousel {
     position: relative;
     overflow: hidden;
+    padding-bottom: 5px !important;
+    padding-top: 5px !important;
 }
 
+/* Equal Height Slides */
+.ate-equal-height .swiper-wrapper {
+    align-items: stretch;
+}
+
+.ate-equal-height .swiper-slide {
+    height: auto;
+    display: flex;
+}
+
+.ate-equal-height .ate-testimonial-item {
+    height: 100%;
+    width: 100%;
+}
+
+/* Testimonial Item */
 .ate-testimonial-item {
     display: flex;
     flex-direction: column;
-    height: 100%;
     text-decoration: none;
     transition: all 0.3s ease;
 }
@@ -24,7 +41,6 @@
 /* Image Position Layouts */
 .ate-image-position-top .ate-testimonial-item {
     flex-direction: column;
-    margin-top: 5px;
 }
 
 .ate-image-position-left .ate-testimonial-item {
@@ -98,6 +114,7 @@
 /* Content */
 .ate-testimonial-content {
     line-height: 1.6;
+    position: relative;
 }
 
 .ate-testimonial-content p {
@@ -108,7 +125,57 @@
     margin-bottom: 0;
 }
 
-/* Navigation Arrows */
+/* Read More / Read Less Functionality */
+.ate-testimonial-content.ate-truncated {
+    overflow: hidden;
+}
+
+.ate-testimonial-content .ate-truncated-text {
+    display: inline;
+}
+
+.ate-testimonial-content .ate-full-text {
+    display: none;
+}
+
+.ate-testimonial-content.ate-expanded .ate-truncated-text {
+    display: none;
+}
+
+.ate-testimonial-content.ate-expanded .ate-full-text {
+    display: block;
+}
+
+.ate-read-more-wrapper {
+    display: block;
+    margin-top: 8px;
+}
+
+.ate-read-more-btn {
+    display: inline-block;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    user-select: none;
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    outline: none;
+}
+
+.ate-read-more-btn:hover {
+    text-decoration: underline;
+}
+
+.ate-read-more-btn:focus {
+    outline: none;
+}
+
+/* Navigation Arrows - Default (Sides) Position */
 .ate-swiper-button-prev,
 .ate-swiper-button-next {
     position: absolute;
@@ -125,32 +192,65 @@
 }
 
 .ate-swiper-button-prev i,
-.ate-swiper-button-next i {
+.ate-swiper-button-next i,
+.ate-swiper-button-prev svg,
+.ate-swiper-button-next svg {
     line-height: 1;
 }
 
-/* Fallback if Font Awesome doesn't load */
-.ate-swiper-button-prev:not(:has(i)):before {
-    content: '‹';
-    font-size: 1.5em;
-    font-weight: bold;
+/* SVG Icon sizing and coloring for custom icons */
+.ate-swiper-button-prev svg,
+.ate-swiper-button-next svg {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
 }
 
-.ate-swiper-button-next:not(:has(i)):before {
-    content: '›';
-    font-size: 1.5em;
-    font-weight: bold;
+.ate-swiper-button-prev img,
+.ate-swiper-button-next img {
+    max-width: 100%;
+    height: auto;
+    display: block;
 }
 
-/* Arrow Position - Inside */
-.ate-swiper-button-prev {
-    left: 10px;
+/* Arrow Position - Sides (default) */
+.ate-arrows-sides .ate-swiper-button-prev {
+    left: 2px;
 }
 
-.ate-swiper-button-next {
-    right: 10px;
+.ate-arrows-sides .ate-swiper-button-next {
+    right: 2px;
 }
 
+/* Arrow Position - Bottom */
+.ate-arrows-bottom .ate-swiper-button-prev,
+.ate-arrows-bottom .ate-swiper-button-next {
+    position: relative;
+    top: auto;
+    transform: none;
+}
+
+.ate-arrows-bottom .ate-navigation-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.ate-arrows-bottom .ate-arrows-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.ate-arrows-bottom .swiper-pagination {
+    position: relative;
+    margin-top: 0;
+}
+
+/* Arrow Hover States */
 .ate-swiper-button-prev:hover,
 .ate-swiper-button-next:hover {
     opacity: 0.7;
@@ -160,6 +260,19 @@
 .ate-swiper-button-next.swiper-button-disabled {
     opacity: 0.35;
     cursor: default;
+}
+
+/* Fallback if icons don't load */
+.ate-swiper-button-prev:not(:has(i)):not(:has(img)):not(:has(svg)):before {
+    content: '‹';
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.ate-swiper-button-next:not(:has(i)):not(:has(img)):not(:has(svg)):before {
+    content: '›';
+    font-size: 1.5em;
+    font-weight: bold;
 }
 
 /* Pagination */
@@ -209,11 +322,17 @@
         margin-left: 0;
         margin-right: 0;
     }
-    .ate-swiper-button-prev {
-        left: 3px;
+    
+    .ate-arrows-sides .ate-swiper-button-prev {
+        left: 2px;
     }
     
-    .ate-swiper-button-next {
-        right: 3px;
+    .ate-arrows-sides .ate-swiper-button-next {
+        right: 2px;
+    }
+
+    .ate-arrows-bottom .ate-navigation-bottom {
+        flex-direction: column;
+        gap: 20px;
     }
 }
